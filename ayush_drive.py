@@ -6,7 +6,6 @@ import time
 import queue
 import vosk
 import json
-import sounddevice as sd
 from datetime import datetime
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import threading
@@ -117,7 +116,7 @@ def process_text_answer(text_input):
 
 # ---------------- VIDEO ----------------
 def process_video_answer():
-
+    import sounddevice as sd
     cap = cv2.VideoCapture(0)
 
     conn = sqlite3.connect("emotion_data_face.db")
