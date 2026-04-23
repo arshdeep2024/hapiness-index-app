@@ -275,7 +275,7 @@ if st.session_state.mode is None:
 
     if IS_CLOUD:
 
-        st.info("Cloud Demo Version: Text Mode Enabled.\nFull Face + Speech + Text version runs locally on Raspberry Pi.")
+        st.info("Cloud Demo Version:Only Text Mode Enabled.")
 
         if st.button("TEXT MODE"):
             st.session_state.mode = "text"
