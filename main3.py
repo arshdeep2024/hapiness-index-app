@@ -9,7 +9,12 @@ import math
 from datetime import datetime
 
 # =====================================================
-# PERFORMANCE (Raspberry Pi)
+# CLOUD DETECTION
+# =====================================================
+IS_CLOUD = os.path.exists("/mount/src")
+
+# =====================================================
+# PERFORMANCE
 # =====================================================
 torch.set_num_threads(2)
 
@@ -64,7 +69,7 @@ def show_gif(filename, width=260):
         )
 
 # =====================================================
-# FINAL GIF BASED ON SCORE
+# FINAL GIF
 # =====================================================
 def final_gif(score):
 
@@ -88,7 +93,7 @@ def show_graph(values, title):
         st.warning("No graph data available.")
         return
 
-    x = [1,2,3,4,5]
+    x = [1, 2, 3, 4, 5]
 
     fig, ax = plt.subplots(figsize=(8,4))
 
@@ -111,7 +116,7 @@ def show_graph(values, title):
     st.pyplot(fig)
 
 # =====================================================
-# TEXT GRAPH DATA (last 5 rows)
+# TEXT GRAPH DATA
 # =====================================================
 def get_last_5_text_scores():
 
@@ -153,7 +158,7 @@ def get_last_5_text_scores():
         return []
 
 # =====================================================
-# VIDEO GRAPH DATA (latest session)
+# VIDEO GRAPH DATA
 # =====================================================
 def get_last_face_scores():
 
@@ -268,15 +273,25 @@ if st.session_state.mode is None:
 
     st.subheader("Select Mode")
 
-    c1, c2 = st.columns(2)
+    if IS_CLOUD:
 
-    if c1.button("TEXT MODE"):
-        st.session_state.mode = "text"
-        st.rerun()
+        st.info("Cloud Demo Version: Text Mode Enabled.\nFull Face + Speech + Text version runs locally on Raspberry Pi.")
 
-    if c2.button("VIDEO MODE"):
-        st.session_state.mode = "video"
-        st.rerun()
+        if st.button("TEXT MODE"):
+            st.session_state.mode = "text"
+            st.rerun()
+
+    else:
+
+        c1, c2 = st.columns(2)
+
+        if c1.button("TEXT MODE"):
+            st.session_state.mode = "text"
+            st.rerun()
+
+        if c2.button("VIDEO MODE"):
+            st.session_state.mode = "video"
+            st.rerun()
 
     st.stop()
 
@@ -293,7 +308,6 @@ if st.session_state.completed:
 
     show_gif(final_gif(avg_hi))
 
-    # TEXT MODE GRAPH
     if st.session_state.mode == "text":
 
         st.markdown("### Text Emotion Trend")
@@ -302,7 +316,6 @@ if st.session_state.completed:
 
         show_graph(values, "HI vs Question Number (Text)")
 
-    # VIDEO MODE GRAPH
     elif st.session_state.mode == "video":
 
         st.markdown("### Facial Emotion Trend")
@@ -364,6 +377,10 @@ if st.session_state.mode == "text":
 # VIDEO MODE
 # =====================================================
 elif st.session_state.mode == "video":
+
+    if IS_CLOUD:
+        st.error("Video mode available only on Raspberry Pi local deployment.")
+        st.stop()
 
     st.info("Uses Raspberry Pi camera + microphone")
 
